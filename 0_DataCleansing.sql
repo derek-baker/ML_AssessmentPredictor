@@ -29,4 +29,7 @@ WHERE
 	ISNUMERIC(p.[ZIP CODE]) = 1
 	
 
-SELECT * FROM CleanedAssessmentData
+DROP TABLE IF EXISTS dbo.CleanedAssessmentDataForTraining
+SELECT TOP 50 PERCENT * 
+INTO dbo.CleanedAssessmentDataForTraining
+FROM dbo.CleanedAssessmentData

@@ -31,7 +31,7 @@ lin_model.fit(df[columns], df[target])
 # Before saving the model to the DB table, convert it to a binary object
 trained_model = pickle.dumps(lin_model)'
 
-        ,@input_data_1 = N'SELECT TotalAV, ParcelId, Swis, Acres, Zip FROM Parcel56.dbo.CleanedAssessmentData'
+        ,@input_data_1 = N'SELECT TotalAV, ParcelId, Swis, Acres, Zip FROM Parcel56.dbo.CleanedAssessmentDataForTraining'
         ,@input_data_1_name = N'assessment_training_data'
         ,@params = N'@trained_model varbinary(max) OUTPUT'
         ,@trained_model = @trained_model OUTPUT;
