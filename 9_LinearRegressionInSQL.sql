@@ -18,25 +18,22 @@
 
 USE Parcel56
 
-
 DECLARE @n int = (SELECT COUNT(*) FROM CleanedAssessmentData)
 
-
 DROP TABLE IF EXISTS #CleanedAssessmentData
-SELECT TOP 25 PERCENT * INTO #CleanedAssessmentData FROM CleanedAssessmentData
-
+SELECT TOP 25 PERCENT * 
+INTO #CleanedAssessmentData 
+FROM CleanedAssessmentData d
+WHERE d.Acres <> 0
 
 DECLARE @M int;
 DECLARE @B int;
 
-
 SELECT @M = (@n * SUM(Acres * TotalAV) - SUM(Acres) * SUM(TotalAV)) / (@n * SUM(Acres * Acres) - SUM(Acres) * SUM(Acres))
 FROM #CleanedAssessmentData
 
-
 SELECT @B = AVG(TotalAV) - AVG(Acres) * (@n * SUM(Acres * TotalAV) - SUM(Acres) * SUM(TotalAV)) / (@n * SUM(Acres * Acres) - SUM(Acres) * SUM(Acres))
 FROM #CleanedAssessmentData
-
 
 SELECT
 	TotAvEst = @M * d.Acres + @B,
@@ -45,13 +42,9 @@ SELECT
 	Zip
 FROM	
 	CleanedAssessmentData d
+WHERE 
+	d.Acres <> 0
 ORDER BY
-	Zip,
+	--Zip,
 	Acres
 		
-
-
-
-
-
-
