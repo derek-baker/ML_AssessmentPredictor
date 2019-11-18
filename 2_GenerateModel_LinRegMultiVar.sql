@@ -26,7 +26,7 @@ target = "TotalAV"
 lin_model = LinearRegression()
 
 # Fit the model to the training data.
-lin_model.fit(df[columns], df[target])
+# lin_model.fit(df[columns], df[target])
 
 # Before saving the model to the DB table, convert it to a binary object
 trained_model = pickle.dumps(lin_model)'
