@@ -5,7 +5,7 @@ GO
 CREATE PROCEDURE usp_PredictAssessment (@model varchar(100))
 AS
 BEGIN
-	DECLARE @py_model varbinary(max) = (SELECT model FROM dbo.AssessmentPyModels WHERE model_name = @model);
+	DECLARE @py_model varbinary(max) = (SELECT model FROM ML.dbo.AssessmentPyModelsMultiVarLinReg WHERE model_name = @model);
 
 	EXEC sp_execute_external_script
 				@language = N'Python',

@@ -29,7 +29,7 @@ WHERE
 	
 
 -- Separate half of the data for training (and hope for a relatively even distribution of data)
-DROP TABLE IF EXISTS AssessmentTrainingDataMultiVarLinReg
+DROP TABLE IF EXISTS ML.dbo.AssessmentTrainingDataMultiVarLinReg
 SELECT TOP 50 PERCENT
 	ParcelId,
 	Swis,	
@@ -37,7 +37,7 @@ SELECT TOP 50 PERCENT
 	Acres,
 	Zip
 INTO
-	AssessmentTrainingDataMultiVarLinReg
+	ML.dbo.AssessmentTrainingDataMultiVarLinReg
 FROM 
 	#Staging
 ORDER BY	
@@ -45,7 +45,7 @@ ORDER BY
 
 
 -- Separate the other half of the data for testing (and hope for a relatively even distribution of data)
-DROP TABLE IF EXISTS AssessmentTestingDataMultiVarLinReg
+DROP TABLE IF EXISTS ML.dbo.AssessmentTestingDataMultiVarLinReg
 SELECT TOP 50 PERCENT
 	ParcelId,
 	Swis,	
@@ -53,7 +53,7 @@ SELECT TOP 50 PERCENT
 	Acres,
 	Zip
 INTO
-	AssessmentTestingDataMultiVarLinReg
+	ML.dbo.AssessmentTestingDataMultiVarLinReg
 FROM 
 	#Staging
 ORDER BY	

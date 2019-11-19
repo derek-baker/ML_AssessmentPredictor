@@ -1,7 +1,7 @@
-USE Parcel56
 
 DECLARE @model VARBINARY(MAX);
-EXEC usp_GenerateAssessmentPyModel @model OUTPUT;
+EXEC ML.dbo.usp_GenerateAssessmentPyMultiValLinearModel @model OUTPUT;
 
-TRUNCATE TABLE dbo.AssessmentPyModels
-INSERT INTO dbo.AssessmentPyModels (model_name, model) VALUES('linear_model', @model);
+TRUNCATE TABLE ML.dbo.AssessmentPyModelsMultiVarLinReg
+INSERT INTO ML.dbo.AssessmentPyModelsMultiVarLinReg(model_name, model) 
+VALUES('linear_model', @model);

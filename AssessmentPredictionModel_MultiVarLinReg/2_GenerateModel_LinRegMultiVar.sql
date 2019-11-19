@@ -1,11 +1,12 @@
-USE Parcel56
+USE ML
 
 -- NOTE: Standard Python indentation rules must be observer
--- Stored procedure that trains and generates a Python model using data and a decision tree algorithm
-DROP PROCEDURE IF EXISTS usp_GenerateAssessmentPyModel;
+-- PURPOSE: Train and generates a Python model using data and a decision tree algorithm
+-- RETURNS: Uses OUTPUT param to make changes to param visible to caller.
+DROP PROCEDURE IF EXISTS dbo.usp_GenerateAssessmentPyMultiValLinearModel;
 GO
 
-CREATE PROCEDURE usp_GenerateAssessmentPyModel(@trained_model varbinary(max) OUTPUT)
+CREATE PROCEDURE dbo.usp_GenerateAssessmentPyMultiValLinearModel(@trained_model varbinary(max) OUTPUT)
 AS
 BEGIN
     EXECUTE sp_execute_external_script
@@ -14,24 +15,21 @@ BEGIN
 from sklearn.linear_model import LinearRegression
 import pickle
 
+# Note that assessment training data was passed into the sproc via @input_data_1_name
 df = assessment_training_data
 
-# Get all the columns from the dataframe.
-columns = df.columns.tolist()
+column_names_list = df.columns.tolist()
 
-# Store the variable well be predicting on.
-target = "TotalAV"
+prediction_target = "TotalAV"
 
-# Initialize the model class.
-lin_model = LinearRegression()
+linear_regression_model = LinearRegression()
 
-# Fit the model to the training data.
-lin_model.fit(df[columns], df[target])
+linear_regression_model.fit(df[column_names_list], df[prediction_target])
 
-# Before saving the model to the DB table, convert it to a binary object
-trained_model = pickle.dumps(lin_model)'
+# Note that trained_model will be visible to the caller via @trained_model
+trained_model = pickle.dumps(linear_regression_model)'
 
-        ,@input_data_1 = N'SELECT TotalAV, ParcelId, Swis, Acres, Zip FROM Parcel56.dbo.CleanedAssessmentDataForTraining'
+        ,@input_data_1 = N'SELECT TotalAV, ParcelId, Swis, Acres, Zip FROM ML.dbo.AssessmentTrainingDataMultiVarLinReg'
         ,@input_data_1_name = N'assessment_training_data'
         ,@params = N'@trained_model varbinary(max) OUTPUT'
         ,@trained_model = @trained_model OUTPUT;
