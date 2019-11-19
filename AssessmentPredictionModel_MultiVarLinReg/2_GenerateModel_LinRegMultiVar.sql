@@ -16,22 +16,17 @@ import pickle
 
 df = assessment_training_data
 
+# Get all the columns from the dataframe.
+columns = df.columns.tolist()
+
+# Store the variable well be predicting on.
+target = "TotalAV"
+
+# Initialize the model class.
 lin_model = LinearRegression()
 
-
-
-# Split the data into training/testing sets
-x_train = df["Acres"].values.reshape(-1,1)
-# x_train = df["Acres"].to_numpy().reshape(-1,1)
-
-# Split the targets into training/testing sets
-y_train = df["TotalAV"]
-
-# Train the model using the training sets
-lin_model.fit(x_train, y_train)
-
-
-
+# Fit the model to the training data.
+lin_model.fit(df[columns], df[target])
 
 # Before saving the model to the DB table, convert it to a binary object
 trained_model = pickle.dumps(lin_model)'

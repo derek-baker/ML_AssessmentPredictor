@@ -1,0 +1,13 @@
+Install Sql Server 2019
+
+
+Initial ML Tools On Sql Server
+    - https://docs.microsoft.com/en-us/sql/advanced-analytics/install/sql-machine-learning-services-windows-install?view=sql-server-ver15
+
+
+Install Client Tools
+    - https://docs.microsoft.com/en-us/sql/advanced-analytics/python/setup-python-client-tools-sql?view=sql-server-ver15
+
+    
+Restore backups of Parcel16 and Parcel56
+
