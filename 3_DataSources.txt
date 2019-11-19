@@ -1,0 +1,4 @@
+Download the .BAK files from the links below and restore them to your SQL Server 2019 instance
+
+https://drive.google.com/open?id=1MqnCr9OX3ct6ychyJYPjxUsGXCOGYaHQ
+https://drive.google.com/open?id=1zV3j8hbKrHJWxLRc6Z5mAQBuoJdUVSUw

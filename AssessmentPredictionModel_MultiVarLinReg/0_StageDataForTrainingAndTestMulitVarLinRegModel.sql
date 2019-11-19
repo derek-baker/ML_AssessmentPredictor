@@ -44,7 +44,7 @@ ORDER BY
 	Zip ASC
 
 
--- Separate half of the data for testing (and hope for a relatively even distribution of data)
+-- Separate the other half of the data for testing (and hope for a relatively even distribution of data)
 DROP TABLE IF EXISTS AssessmentTestingDataMultiVarLinReg
 SELECT TOP 50 PERCENT
 	ParcelId,
