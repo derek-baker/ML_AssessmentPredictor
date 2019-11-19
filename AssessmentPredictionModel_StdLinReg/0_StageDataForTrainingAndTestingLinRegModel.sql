@@ -1,10 +1,14 @@
-DROP TABLE IF EXISTS AssessmentTrainingDataLinReg
+-- NOTE: The independent variable for this model will be Acres, 
+-- 		 so we can use data from different NYS counties.
+
+
+DROP TABLE IF EXISTS ML.dbo.AssessmentTrainingDataLinReg
 SELECT DISTINCT
 	ParcelId = a.Parcel_ID,
 	a.Swis,	
 	a.TotalAV,
 	Acres = p.[TOTAL ACREAGE],
-	Zip = REPLACE(p.[ZIP CODE], '-', '')
+	Zip = CAST( REPLACE( REPLACE(p.[ZIP CODE], '-', ''), '.', '') AS int)
 	--a.RollYr,
 	--a.Full_Market_Value,
 	--p.DIMENSIONS,	
@@ -15,7 +19,7 @@ SELECT DISTINCT
 	--p.[CITY/STATE],	
 	--p.[PARCEL LOCATION NUMBER]	
 INTO
-	AssessmentTrainingDataLinReg
+	ML.dbo.AssessmentTrainingDataLinReg
 FROM 
 	Parcel56.dbo.ASSMT a
 	LEFT JOIN Parcel56.dbo.PROPERTY p on a.Parcel_ID = p.PARCEL_ID
@@ -24,20 +28,18 @@ WHERE
 	AND
 	a.PROP_CLASS = 210
 	AND
-	ISNUMERIC(p.[ZIP CODE]) = 1
-	
+	ISNUMERIC(p.[ZIP CODE]) = 1	
 
 
-
-DROP TABLE IF EXISTS AssessmentTestingDataLinReg
+DROP TABLE IF EXISTS ML.dbo.AssessmentTestingDataLinReg
 SELECT DISTINCT
 	ParcelId = a.Parcel_ID,
 	a.Swis,	
 	a.TotalAV,
 	Acres = p.[TOTAL ACREAGE],
-	Zip = REPLACE(p.[ZIP CODE], '-', '')	
+	Zip = CAST( REPLACE( REPLACE(p.[ZIP CODE], '-', ''), '.', '') AS int)
 INTO
-	AssessmentTestingDataLinReg
+	ML.dbo.AssessmentTestingDataLinReg
 FROM 
 	Parcel16.dbo.ASSMT a
 	LEFT JOIN Parcel56.dbo.PROPERTY p on a.Parcel_ID = p.PARCEL_ID

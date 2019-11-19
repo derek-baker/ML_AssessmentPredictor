@@ -1,11 +1,11 @@
-USE Parcel56
+USE ML
 
 -- NOTE: Standard Python indentation rules must be observed
--- PURPOSE: Train and effectively return a linear regression model 
-DROP PROCEDURE IF EXISTS usp_GenerateAssessmentPyModel;
+-- PURPOSE: Train and effectively return a linear regression model(serialized to binary)
+DROP PROCEDURE IF EXISTS dbo.usp_GenerateAssessmentPyLinearModel;
 GO
 
-CREATE PROCEDURE usp_GenerateAssessmentPyModel(@trained_model varbinary(max) OUTPUT)
+CREATE PROCEDURE dbo.usp_GenerateAssessmentPyLinearModel(@trained_model varbinary(max) OUTPUT)
 AS
 BEGIN
     EXECUTE sp_execute_external_script
@@ -24,7 +24,7 @@ y_train = df["TotalAV"]
 
 linear_regression_model.fit(x_train, y_train)
 
-# Convert model to a binary object(@trained model is basically passed in by reference)
+# Convert model to a binary object (@trained model is basically passed in by reference)
 trained_model = pickle.dumps(linear_regression_model)'
 
         ,@input_data_1 = N'SELECT TotalAV, ParcelId, Swis, Acres, Zip FROM ML.dbo.AssessmentTrainingDataLinReg'

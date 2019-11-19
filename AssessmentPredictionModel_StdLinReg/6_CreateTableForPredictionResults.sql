@@ -1,9 +1,8 @@
-USE Parcel56
 
-DROP TABLE IF EXISTS [dbo].[AssessmentPredictions];
+DROP TABLE IF EXISTS ML.[dbo].[AssessmentPredictions_LinReg];
 GO
 
-CREATE TABLE [dbo].[AssessmentPredictions](
+CREATE TABLE ML.[dbo].[AssessmentPredictions_LinReg](
 	[TotalAV_Predicted] [int] NULL,
 	[TotalAV_Actual] [int] NULL,
 	[ParcelId] [int] NULL,

@@ -1,16 +1,16 @@
+USE ML
 
 -- NOTE: Standard Python indentation rules must be observed
-DROP PROCEDURE IF EXISTS usp_PredictAssessment;
+DROP PROCEDURE IF EXISTS usp_PredictAssessmentWithLinReg;
 GO
-CREATE PROCEDURE usp_PredictAssessment (@model varchar(100))
+CREATE PROCEDURE usp_PredictAssessmentWithLinReg (@model varchar(100))
 AS
 BEGIN
-	DECLARE @py_model varbinary(max) = (SELECT model FROM dbo.AssessmentPyModels WHERE model_name = @model);
+	DECLARE @py_model varbinary(max) = (SELECT model FROM ML.dbo.AssessmentPyLinRegModels WHERE model_name = @model);
 
 	EXEC sp_execute_external_script
 				@language = N'Python',
 				@script = N'
-# Import the scikit-learn function to compute error.
 from sklearn.metrics import mean_squared_error
 import pickle
 import pandas as pd
@@ -31,11 +31,11 @@ predictions_df = pd.DataFrame(lin_predictions)
 OutputDataSet = pd.concat([predictions_df, df["TotalAV"], df["ParcelId"], df["Swis"], df["Acres"], df["Zip"]], axis=1)
 '
 
-,@input_data_1 = N'SELECT TotalAV, ParcelId, Swis, Acres, Zip FROM Parcel56.dbo.CleanedAssessmentData'
+,@input_data_1 = N'SELECT TotalAV, ParcelId, Swis, Acres, Zip FROM ML.dbo.AssessmentTestingDataLinReg'
 ,@input_data_1_name = N'assessment_score_data'
 ,@params = N'@py_model varbinary(max)'
 ,@py_model = @py_model
-WITH result SETS ((
+WITH result SETS((
     "TotalAV_Predicted" float,
     "TotalAV" int,
     "ParcelId" int,

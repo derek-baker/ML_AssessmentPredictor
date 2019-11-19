@@ -1,8 +1,6 @@
-USE Parcel56;
-
-DROP TABLE IF EXISTS dbo.AssessmentPyModels;
+DROP TABLE IF EXISTS ML.dbo.AssessmentPyLinRegModels;
 GO
-CREATE TABLE dbo.AssessmentPyModels (
+CREATE TABLE ML.dbo.AssessmentPyLinRegModels (
     model_name VARCHAR(30) NOT NULL DEFAULT('default model') PRIMARY KEY,
     model VARBINARY(MAX) NOT NULL
 );
