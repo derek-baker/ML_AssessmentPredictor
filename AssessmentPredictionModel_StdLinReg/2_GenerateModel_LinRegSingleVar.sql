@@ -19,7 +19,7 @@ df = assessment_training_data
 
 linear_regression_model = LinearRegression()
 
-x_train = df["Acres"].values.reshape(-1,1)
+x_train = df["Sqft"].values.reshape(-1,1)
 y_train = df["TotalAV"]
 
 linear_regression_model.fit(x_train, y_train)
@@ -27,7 +27,7 @@ linear_regression_model.fit(x_train, y_train)
 # Convert model to a binary object (@trained model is basically passed in by reference)
 trained_model = pickle.dumps(linear_regression_model)'
 
-        ,@input_data_1 = N'SELECT TotalAV, ParcelId, Swis, Acres, Zip FROM ML.dbo.AssessmentTrainingDataLinReg'
+        ,@input_data_1 = N'SELECT * FROM ML.dbo.AssessmentTrainingDataLinReg'
         ,@input_data_1_name = N'assessment_training_data'
         ,@params = N'@trained_model varbinary(max) OUTPUT'
         ,@trained_model = @trained_model OUTPUT;

@@ -1,3 +1,5 @@
+-- Run the code to create and store the model
+
 DECLARE @model VARBINARY(MAX);
 EXEC ML.dbo.usp_GenerateAssessmentPyLinearModel @model OUTPUT;
 

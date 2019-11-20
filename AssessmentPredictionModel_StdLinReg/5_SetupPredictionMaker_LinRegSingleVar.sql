@@ -20,7 +20,7 @@ assessment_model = pickle.loads(py_model)
 df = assessment_score_data
 
 # Generate the predictions for the test set.
-lin_predictions = assessment_model.predict(df["Acres"].values.reshape(-1,1))
+lin_predictions = assessment_model.predict(df["Sqft"].values.reshape(-1,1))
 
 # Compute error between the test predictions and the actual values.
 # lin_mse = mean_squared_error(lin_predictions, df["TotalAV"])
@@ -28,20 +28,21 @@ lin_predictions = assessment_model.predict(df["Acres"].values.reshape(-1,1))
 
 predictions_df = pd.DataFrame(lin_predictions)
 
-OutputDataSet = pd.concat([predictions_df, df["TotalAV"], df["ParcelId"], df["Swis"], df["Acres"], df["Zip"]], axis=1)
+OutputDataSet = pd.concat([predictions_df, df["TotalAV"], df["ConditionCode"], df["Sqft"], df["NumBaths"], df["NumBedrooms"], df["Age"]], axis=1)
 '
 
-,@input_data_1 = N'SELECT TotalAV, ParcelId, Swis, Acres, Zip FROM ML.dbo.AssessmentTestingDataLinReg'
+,@input_data_1 = N'SELECT * FROM ML.dbo.AssessmentTestingDataLinReg'
 ,@input_data_1_name = N'assessment_score_data'
 ,@params = N'@py_model varbinary(max)'
 ,@py_model = @py_model
 WITH result SETS((
-    "TotalAV_Predicted" float,
+    "TotalAV_Predicted" int,
     "TotalAV" int,
-    "ParcelId" int,
-    "Swis" int,    
-    "Acres" int,
-    "Zip" int
+    "ConditionCode" int,
+    "Sqft" int,
+    "NumBaths" int,
+    "NumBedrooms" int,
+    "Age" int
 ));
 
 END;

@@ -5,29 +5,34 @@
 DECLARE @n int = (SELECT COUNT(*) FROM ML.dbo.AssessmentTestingDataLinReg)
 
 DROP TABLE IF EXISTS #AssessmentTestingDataLinReg
-SELECT TOP 25 PERCENT * 
-INTO #AssessmentTestingDataLinReg 
-FROM ML.dbo.AssessmentTestingDataLinReg d
-WHERE d.Acres <> 0
+SELECT TOP 30 PERCENT 
+	Sqft = d.Sqft,
+	TotalAV = d.TotalAV 
+INTO 
+	#AssessmentTestingDataLinReg 
+FROM 
+	ML.dbo.AssessmentTestingDataLinReg d
 
-DECLARE @M int;
-DECLARE @B int;
 
-SELECT @M = (@n * SUM(Acres * TotalAV) - SUM(Acres) * SUM(TotalAV)) / (@n * SUM(Acres * Acres) - SUM(Acres) * SUM(Acres))
+DECLARE @M decimal(18,3);
+DECLARE @B decimal(18,3);
+
+
+SELECT 
+	@M = CAST( (@n * SUM(Sqft * TotalAV) - SUM(Sqft) * SUM(TotalAV)) AS decimal(18,3)) / (@n * SUM(Sqft * Sqft) - SUM(Sqft) * SUM(Sqft))
 FROM #AssessmentTestingDataLinReg
 
-SELECT @B = AVG(TotalAV) - AVG(Acres) * (@n * SUM(Acres * TotalAV) - SUM(Acres) * SUM(TotalAV)) / (@n * SUM(Acres * Acres) - SUM(Acres) * SUM(Acres))
+
+SELECT @B = AVG(TotalAV) - AVG(Sqft) * (@n * SUM(Sqft * TotalAV) - SUM(Sqft) * SUM(TotalAV)) / (@n * SUM(Sqft * Sqft) - SUM(Sqft) * SUM(Sqft))
 FROM #AssessmentTestingDataLinReg
+
 
 SELECT
-	TotAvEst = @M * d.Acres + @B,
-	TotalAV,
-	Acres,
-	Zip
+	TotalAVEst = CAST(@M * d.Sqft + @B AS int), 
+	TotalAV = TotalAV,
+	Sqft
 FROM	
 	ML.dbo.AssessmentTestingDataLinReg d
-WHERE 
-	d.Acres <> 0
-ORDER BY	
-	Acres
+ORDER BY		
+	Sqft ASC
 		
