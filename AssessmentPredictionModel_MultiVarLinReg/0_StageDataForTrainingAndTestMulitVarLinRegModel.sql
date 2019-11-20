@@ -1,60 +1,66 @@
--- Stage all data
-DROP TABLE IF EXISTS #Staging
-SELECT DISTINCT
-	ParcelId = a.Parcel_ID,
-	a.Swis,	
-	a.TotalAV,
-	Acres = p.[TOTAL ACREAGE],
-	Zip = REPLACE(p.[ZIP CODE], '-', '')
-	--a.RollYr,
-	--a.Full_Market_Value,
-	--p.DIMENSIONS,	
-	--p.BASE_PROP_CLASS,
-	--a.PROP_CLASS,
-	--p.[PROPERTY CLASS DESC],
-	--p.STREET,
-	--p.[CITY/STATE],	
-	--p.[PARCEL LOCATION NUMBER]	
-INTO
-	#Staging 
-FROM 
-	Parcel56.dbo.ASSMT a
-	LEFT JOIN Parcel56.dbo.PROPERTY p on a.Parcel_ID = p.PARCEL_ID
-WHERE 
-	a.RollYr = 2020
-	AND
-	a.PROP_CLASS = 210
-	AND
-	ISNUMERIC(p.[ZIP CODE]) = 1
-	
+-- PURPOSE: Staging training and testing data to fit ML models to.
 
--- Separate half of the data for training (and hope for a relatively even distribution of data)
+-- NOTE: The independent variable for this model will be square feet of living area, 
+-- 		 so we can use data from different NYS counties (Assuming the markets are similar)
+
+
 DROP TABLE IF EXISTS ML.dbo.AssessmentTrainingDataMultiVarLinReg
-SELECT TOP 50 PERCENT
-	ParcelId,
-	Swis,	
-	TotalAV,
-	Acres,
-	Zip
+SELECT DISTINCT
+    -- Swis = [SWIS CODE]
+    -- ,TaxId = CAST(r.TAXID AS bigint)
+	-- ,RowNum = ROW_NUMBER() OVER (ORDER BY r.[SWIS CODE], r.[TAXID])
+    ConditionCode = [OVERALL CONDITION]
+    ,Sqft = CAST([SQUARE FOOT LIVING AREA] AS bigint)
+    ,NumBaths = [NO OF BATHS]
+    ,NumBedrooms = [NO OF BEDROOMS]
+    ,Age = YEAR(GETDATE()) - [YEAR BUILT]
+    ,TotalAV = CAST(a.TotalAV / 1000 as bigint)
 INTO
 	ML.dbo.AssessmentTrainingDataMultiVarLinReg
 FROM 
-	#Staging
-ORDER BY	
-	Zip ASC
+    [Parcel56].[dbo].[RES] r
+    LEFT JOIN [Parcel56].[dbo].ASSMT a ON r.PARCEL_ID = a.Parcel_ID AND r.TAXID = a.TaxID AND r.ROLLYR = a.RollYr
+WHERE
+    [SITE PROPERTY CLASS] = 210
+    AND 
+    r.ROLLYR = 2020
+    AND 
+    r.[SQUARE FOOT LIVING AREA] > 0
+    AND
+    a.TotalAV > 9999
+	AND
+	a.TotalAV < 10000000
 
 
--- Separate the other half of the data for testing (and hope for a relatively even distribution of data)
+SELECT * FROM ML.dbo.AssessmentTrainingDataMultiVarLinReg ORDER BY TotalAV DESC
+
+
 DROP TABLE IF EXISTS ML.dbo.AssessmentTestingDataMultiVarLinReg
-SELECT TOP 50 PERCENT
-	ParcelId,
-	Swis,	
-	TotalAV,
-	Acres,
-	Zip
+SELECT DISTINCT
+    --Swis = [SWIS CODE]
+    -- ,TaxId = CAST(r.TAXID AS bigint)
+	--,RowNum = ROW_NUMBER() OVER (ORDER BY r.[SWIS CODE], r.[TAXID])
+    ConditionCode = [OVERALL CONDITION]
+    ,Sqft = CAST([SQUARE FOOT LIVING AREA] AS bigint)
+    ,NumBaths = [NO OF BATHS]
+    ,NumBedrooms = [NO OF BEDROOMS]
+    ,Age = YEAR(GETDATE()) - [YEAR BUILT]
+    ,TotalAV = CAST(a.TotalAV / 1000 as bigint)
 INTO
 	ML.dbo.AssessmentTestingDataMultiVarLinReg
 FROM 
-	#Staging
-ORDER BY	
-	Zip DESC
+    [Parcel16].[dbo].[RES] r
+    LEFT JOIN [Parcel16].[dbo].ASSMT a ON r.PARCEL_ID = a.Parcel_ID AND r.TAXID = a.TaxID AND r.ROLLYR = a.RollYr
+WHERE
+    [SITE PROPERTY CLASS] = 210
+    AND 
+    r.ROLLYR = 2020
+    AND 
+    r.[SQUARE FOOT LIVING AREA] > 0
+    AND
+    a.TotalAV > 9999
+	AND
+	a.TotalAV < 10000000
+
+
+SELECT * FROM ML.dbo.AssessmentTestingDataMultiVarLinReg ORDER BY TotalAV DESC
