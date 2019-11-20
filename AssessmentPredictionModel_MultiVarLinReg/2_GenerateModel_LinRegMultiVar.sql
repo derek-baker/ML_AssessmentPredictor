@@ -29,7 +29,7 @@ linear_regression_model.fit(df[column_names_list], df[prediction_target])
 # Note that trained_model will be visible to the caller via @trained_model
 trained_model = pickle.dumps(linear_regression_model)'
 
-        ,@input_data_1 = N'SELECT TotalAV, ParcelId, Swis, Acres, Zip FROM ML.dbo.AssessmentTrainingDataMultiVarLinReg'
+        ,@input_data_1 = N'SELECT * FROM ML.dbo.AssessmentTrainingDataMultiVarLinReg'
         ,@input_data_1_name = N'assessment_training_data'
         ,@params = N'@trained_model varbinary(max) OUTPUT'
         ,@trained_model = @trained_model OUTPUT;

@@ -4,10 +4,10 @@
 USE ML;
 
 
--- Get the input data
+-- Get the input data (only a small amount since this query is so inefficient)
 DECLARE @TestData TABLE (i int IDENTITY(1, 1), X1 int, X2 int, X3 int, X4 int, y float)
 INSERT INTO @TestData
-SELECT DISTINCT 
+SELECT DISTINCT TOP 300 
 	x1 = ConditionCode,
 	x2 = Sqft,
 	x3 = NumBedrooms,
@@ -15,6 +15,11 @@ SELECT DISTINCT
 	y = TotalAV
 FROM
 	dbo.AssessmentTestingDataMultiVarLinReg
+ORDER BY 
+    Sqft, 
+    NumBedrooms, 
+    ConditionCode, 
+    Age
 
 
 -- Put our data into dbo.Matrix types
@@ -70,7 +75,8 @@ SELECT
 	ConditionCode = x1,
 	Sqft = x2,
 	NumBedrooms = x3,
-	Age = x4	
+	Age = x4,
+	RowNumber = ROW_NUMBER() OVER (ORDER BY x2, x3, x1, x4)
 FROM(
     SELECT 
 		x.i, 

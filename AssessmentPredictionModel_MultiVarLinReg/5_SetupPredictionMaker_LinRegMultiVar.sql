@@ -1,5 +1,7 @@
 
+-- PURPOSE: Make predictions against new data
 -- NOTE: Standard Python indentation rules must be observed
+
 DROP PROCEDURE IF EXISTS usp_PredictAssessment;
 GO
 CREATE PROCEDURE usp_PredictAssessment (@model varchar(100))
@@ -34,19 +36,19 @@ lin_mse = mean_squared_error(lin_predictions, df[target])
 
 predictions_df = pd.DataFrame(lin_predictions)
 
-OutputDataSet = pd.concat([predictions_df, df["TotalAV"], df["ParcelId"], df["Swis"], df["Acres"], df["Zip"]], axis=1)
+OutputDataSet = pd.concat([predictions_df, df["TotalAV"], df["ConditionCode"], df["Sqft"], df["NumBedrooms"], df["Age"]], axis=1)
 '
-,@input_data_1 = N'SELECT TotalAV, ParcelId, Swis, Acres, Zip FROM Parcel56.dbo.CleanedAssessmentData'
+,@input_data_1 = N'SELECT * FROM [ML].[dbo].[AssessmentTestingDataMultiVarLinReg]'
 ,@input_data_1_name = N'assessment_score_data'
 ,@params = N'@py_model varbinary(max)'
 ,@py_model = @py_model
 WITH result SETS ((
     "TotalAV_Predicted" float,
     "TotalAV" int,
-    "ParcelId" int,
-    "Swis" int,    
-    "Acres" int,
-    "Zip" int
+    "ConditionCode" int,
+    "Sqft" int,    
+    "NumBedrooms" int,
+    "Age" int
 ));
 
 END;

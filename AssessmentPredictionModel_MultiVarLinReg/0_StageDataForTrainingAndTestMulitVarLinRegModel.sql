@@ -11,7 +11,7 @@ SELECT DISTINCT
 	-- ,RowNum = ROW_NUMBER() OVER (ORDER BY r.[SWIS CODE], r.[TAXID])
     ConditionCode = [OVERALL CONDITION]
     ,Sqft = CAST([SQUARE FOOT LIVING AREA] AS bigint)
-    ,NumBaths = [NO OF BATHS]
+    --,NumBaths = [NO OF BATHS]
     ,NumBedrooms = [NO OF BEDROOMS]
     ,Age = YEAR(GETDATE()) - [YEAR BUILT]
     ,TotalAV = CAST(a.TotalAV / 1000 as bigint)
@@ -42,7 +42,7 @@ SELECT DISTINCT
 	--,RowNum = ROW_NUMBER() OVER (ORDER BY r.[SWIS CODE], r.[TAXID])
     ConditionCode = [OVERALL CONDITION]
     ,Sqft = CAST([SQUARE FOOT LIVING AREA] AS bigint)
-    ,NumBaths = [NO OF BATHS]
+    --,NumBaths = [NO OF BATHS]
     ,NumBedrooms = [NO OF BEDROOMS]
     ,Age = YEAR(GETDATE()) - [YEAR BUILT]
     ,TotalAV = CAST(a.TotalAV / 1000 as bigint)

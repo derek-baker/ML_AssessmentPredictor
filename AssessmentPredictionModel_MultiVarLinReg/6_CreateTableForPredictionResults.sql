@@ -1,14 +1,14 @@
-USE Parcel56
+USE ML
 
-DROP TABLE IF EXISTS [dbo].[AssessmentPredictions];
+DROP TABLE IF EXISTS [dbo].[AssessmentPredictions_MultiVarLinReg];
 GO
 
-CREATE TABLE [dbo].[AssessmentPredictions](
+CREATE TABLE [dbo].[AssessmentPredictions_MultiVarLinReg](
 	[TotalAV_Predicted] [int] NULL,
-	[TotalAV_Actual] [int] NULL,
-	[ParcelId] [int] NULL,
-	[Swis] [int] NULL,
-	[Acres] [int] NULL,
-	[Zip] [int] NULL
+	[TotalAV] [int] NULL,
+	[ConditionCode] [int] NULL,
+	[Sqft] [int] NULL,
+	[NumBedrooms] [int] NULL,
+	[Age] [int] NULL
 ) ON [PRIMARY]
 GO

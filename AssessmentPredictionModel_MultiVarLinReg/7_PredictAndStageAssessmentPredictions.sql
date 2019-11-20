@@ -1,9 +1,25 @@
-USE Parcel56
+USE ML
 
---Insert the results of the predictions for test set into a table
-TRUNCATE TABLE dbo.AssessmentPredictions
-INSERT INTO AssessmentPredictions
+
+TRUNCATE TABLE [dbo].[AssessmentPredictions_MultiVarLinReg]
+INSERT INTO [dbo].[AssessmentPredictions_MultiVarLinReg]
 EXEC usp_PredictAssessment 'linear_model';
 
--- Select contents of the table
-SELECT * FROM AssessmentPredictions;
+
+SELECT 
+    * 
+FROM 
+    [dbo].[AssessmentPredictions_MultiVarLinReg];
+
+
+-- Smaller set for comparison of SQL-based method
+SELECT DISTINCT TOP 300
+    TotalAV,
+    TotalAV_Predicted,
+    p.ConditionCode, 
+    p.Sqft, 
+    p.NumBedrooms, 
+    p.Age,
+    RowNumber = ROW_NUMBER() OVER (ORDER BY p.Sqft, p.NumBedrooms, p.ConditionCode, p.Age)
+FROM 
+    [dbo].[AssessmentPredictions_MultiVarLinReg] p
