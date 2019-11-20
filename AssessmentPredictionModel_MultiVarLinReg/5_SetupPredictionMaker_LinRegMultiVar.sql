@@ -10,7 +10,6 @@ BEGIN
 	EXEC sp_execute_external_script
 				@language = N'Python',
 				@script = N'
-# Import the scikit-learn function to compute error.
 from sklearn.metrics import mean_squared_error
 import pickle
 import pandas as pd
