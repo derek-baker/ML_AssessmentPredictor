@@ -1,6 +1,8 @@
-
 -- PURPOSE: Make predictions against new data
 -- NOTE: Standard Python indentation rules must be observed
+
+USE ML
+GO
 
 DROP PROCEDURE IF EXISTS usp_PredictAssessment;
 GO
@@ -28,13 +30,14 @@ target = "TotalAV"
 
 # Generate the predictions for the test set.
 lin_predictions = assessment_model.predict(df[columns])
-print(lin_predictions)
 
 # Compute error between the test predictions and the actual values.
-lin_mse = mean_squared_error(lin_predictions, df[target])
-#print(lin_mse)
+mean_squared_error = mean_squared_error(lin_predictions, df[target])
+print(mean_squared_error)
 
 predictions_df = pd.DataFrame(lin_predictions)
+predictions_df["MeanSquaredErr"] = mean_squared_error
+
 
 OutputDataSet = pd.concat([predictions_df, df["TotalAV"], df["ConditionCode"], df["Sqft"], df["NumBedrooms"], df["Age"]], axis=1)
 '
@@ -43,7 +46,8 @@ OutputDataSet = pd.concat([predictions_df, df["TotalAV"], df["ConditionCode"], d
 ,@params = N'@py_model varbinary(max)'
 ,@py_model = @py_model
 WITH result SETS ((
-    "TotalAV_Predicted" float,
+    "TotalAV_Predicted" int,
+    "MeanSquaredError" nvarchar(100),
     "TotalAV" int,
     "ConditionCode" int,
     "Sqft" int,    
