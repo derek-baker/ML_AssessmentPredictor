@@ -20,13 +20,16 @@ assessment_model = pickle.loads(py_model)
 df = assessment_score_data
 
 # Generate the predictions for the test set.
-lin_predictions = assessment_model.predict(df["Sqft"].values.reshape(-1,1))
+linear_predictions = assessment_model.predict(df["Sqft"].values.reshape(-1,1))
+predictions_df = pd.DataFrame(linear_predictions)
+
 
 # Compute error between the test predictions and the actual values.
-# lin_mse = mean_squared_error(lin_predictions, df["TotalAV"])
-# print(lin_mse)
+error = mean_squared_error(df["TotalAV"], linear_predictions)
+print(error)
 
-predictions_df = pd.DataFrame(lin_predictions)
+predictions_df["MeanSquaredErr"] = error
+
 
 OutputDataSet = pd.concat([predictions_df, df["TotalAV"], df["ConditionCode"], df["Sqft"], df["NumBaths"], df["NumBedrooms"], df["Age"]], axis=1)
 '
@@ -37,6 +40,7 @@ OutputDataSet = pd.concat([predictions_df, df["TotalAV"], df["ConditionCode"], d
 ,@py_model = @py_model
 WITH result SETS((
     "TotalAV_Predicted" int,
+    "MeanSquaredErr" nvarchar(100),
     "TotalAV" int,
     "ConditionCode" int,
     "Sqft" int,

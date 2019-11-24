@@ -4,6 +4,7 @@ GO
 
 CREATE TABLE ML.[dbo].[AssessmentPredictions_LinReg](
 	[TotalAV_Predicted] [int] NULL,
+	[MeanSquaredErr] nvarchar(100) NULL,
 	[TotalAV_Actual] [int] NULL,
 	[ConditionCode] [int] NULL,
 	[Sqft] [int] NULL,
