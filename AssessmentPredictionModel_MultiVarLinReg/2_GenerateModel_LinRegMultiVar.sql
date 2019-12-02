@@ -1,6 +1,6 @@
 USE ML
 
--- NOTE: Standard Python indentation rules must be observer
+-- NOTE: Standard Python indentation rules must be observed
 -- PURPOSE: Train and generates a Python model using data and a decision tree algorithm
 -- RETURNS: Uses OUTPUT param to make changes to param visible to caller.
 DROP PROCEDURE IF EXISTS dbo.usp_GenerateAssessmentPyMultiValLinearModel;

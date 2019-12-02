@@ -1,6 +1,6 @@
 -- PURPOSE: Staging training and testing data to fit ML models to.
 
--- NOTE: The independent variable for this model will be square feet of living area, 
+-- NOTE: The independent variable for the standard linear model will be square feet of living area, 
 -- 		 so we can use data from different NYS counties (Assuming the markets are similar)
 
 
